@@ -13,7 +13,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
         private static int SIGNATURE_HEADER = BitConverter.ToInt32(SIGNATURE_HEADER_BYTES, 0);
 
         private string standardVersion;
-        private ISOChannels channelsEnabled;
+        private ISOChannels channelsDescription;
 
         public ISOSignature(byte[] signatureBinary)
         {
@@ -23,7 +23,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             }
 
             standardVersion = GetStandardVersion(signatureBinary);
-            channelsEnabled = new ISOChannels(signatureBinary);
+            channelsDescription = new ISOChannels(signatureBinary);
         }
 
         private bool IsISOHeader(byte[] binary)

@@ -29,6 +29,8 @@ namespace SignatureSDKTest.ISOSignatureDecoder
         public bool E { get {return bitFlags.Get((int)IsoChannelsEnum.E); } }
         public bool R { get { return bitFlags.Get((int)IsoChannelsEnum.R); } }
 
+        public int LastByteIndex = 0;
+
         public int Count
         {
             get
@@ -85,6 +87,13 @@ namespace SignatureSDKTest.ISOSignatureDecoder
                 channelNum = ci.ToIndex;
 
             }
+
+            if(binary[channelNum] != 0)
+            {
+                throw new ArgumentException("Incorrect binary header - non zero byte at the end of sequence");
+            }
+
+            LastByteIndex = channelNum;
         }
 
     }

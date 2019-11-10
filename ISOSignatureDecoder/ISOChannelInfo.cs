@@ -24,6 +24,8 @@ namespace SignatureSDKTest.ISOSignatureDecoder
         public double Scale;
         public double MinValue;
         public double MaxValue;
+        public double Avg;
+        public double Std;
         public int Count
         {
             get
@@ -48,7 +50,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             ChannelType = type;
             FromIndex = index;
             info = new BitArray(new byte[1] { signatureBinary[index] });
-            ToIndex = FromIndex + 2 * Convert.ToInt32(HasScale) + 2 * Convert.ToInt32(HasMinValue) + 2 * Convert.ToInt32(HasMaxValue) + 2 * Convert.ToInt32(HasAvgValue) + 2 * Convert.ToInt32(HasStd);
+            ToIndex = FromIndex + 1 + 2 * Convert.ToInt32(HasScale) + 2 * Convert.ToInt32(HasMinValue) + 2 * Convert.ToInt32(HasMaxValue) + 2 * Convert.ToInt32(HasAvgValue) + 2 * Convert.ToInt32(HasStd);
 
             int descBytes = index + 1;
             if(HasScale)
@@ -87,7 +89,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
                     case IsoChannelsEnum.TX:
                     case IsoChannelsEnum.TY:
                         {
-                            MinValue = (double)BitConverter.ToUInt16(raw, 0);
+                            MinValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
                             break;
                         }
 
@@ -99,7 +101,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
                     case IsoChannelsEnum.E:
                     case IsoChannelsEnum.R:
                         {
-                            MinValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
+                            MinValue = (double)BitConverter.ToUInt16(raw, 0);
                             break;
                         }
                 }
@@ -110,8 +112,106 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             if (HasMaxValue)
             {
                 byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
-                MaxValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
+                switch (ChannelType)
+                {
+                    case IsoChannelsEnum.X:
+                    case IsoChannelsEnum.Y:
+                    case IsoChannelsEnum.VX:
+                    case IsoChannelsEnum.VY:
+                    case IsoChannelsEnum.AX:
+                    case IsoChannelsEnum.AY:
+                    case IsoChannelsEnum.TX:
+                    case IsoChannelsEnum.TY:
+                        {
+                            MaxValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
+                            break;
+                        }
+
+                    case IsoChannelsEnum.Z:
+                    case IsoChannelsEnum.T:
+                    case IsoChannelsEnum.DT:
+                    case IsoChannelsEnum.F:
+                    case IsoChannelsEnum.Az:
+                    case IsoChannelsEnum.E:
+                    case IsoChannelsEnum.R:
+                        {
+                            MaxValue = (double)BitConverter.ToUInt16(raw, 0);
+                            break;
+                        }
+                }
                 descBytes += 2;
+            }
+
+            if(HasAvgValue)
+            {
+                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                switch (ChannelType)
+                {
+                    case IsoChannelsEnum.X:
+                    case IsoChannelsEnum.Y:
+                    case IsoChannelsEnum.VX:
+                    case IsoChannelsEnum.VY:
+                    case IsoChannelsEnum.AX:
+                    case IsoChannelsEnum.AY:
+                    case IsoChannelsEnum.TX:
+                    case IsoChannelsEnum.TY:
+                        {
+                            Avg = (int)BitConverter.ToUInt16(raw, 0) - 32768;
+                            break;
+                        }
+
+                    case IsoChannelsEnum.Z:
+                    case IsoChannelsEnum.T:
+                    case IsoChannelsEnum.DT:
+                    case IsoChannelsEnum.F:
+                    case IsoChannelsEnum.Az:
+                    case IsoChannelsEnum.E:
+                    case IsoChannelsEnum.R:
+                        {
+                            Avg = (int)BitConverter.ToUInt16(raw, 0);
+                            break;
+                        }
+                }
+                Console.WriteLine(Avg/Scale);
+                descBytes += 2;
+            }
+
+            if (HasStd)
+            {
+                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                switch (ChannelType)
+                {
+                    case IsoChannelsEnum.X:
+                    case IsoChannelsEnum.Y:
+                    case IsoChannelsEnum.VX:
+                    case IsoChannelsEnum.VY:
+                    case IsoChannelsEnum.AX:
+                    case IsoChannelsEnum.AY:
+                    case IsoChannelsEnum.TX:
+                    case IsoChannelsEnum.TY:
+                        {
+                            Std = (int)BitConverter.ToUInt16(raw, 0) - 32768;
+                            break;
+                        }
+
+                    case IsoChannelsEnum.Z:
+                    case IsoChannelsEnum.T:
+                    case IsoChannelsEnum.DT:
+                    case IsoChannelsEnum.F:
+                    case IsoChannelsEnum.Az:
+                    case IsoChannelsEnum.E:
+                    case IsoChannelsEnum.R:
+                        {
+                            Std = (int)BitConverter.ToUInt16(raw, 0);
+                            break;
+                        }
+                }
+                descBytes += 2;
+            }
+
+            if(descBytes != ToIndex)
+            {
+                throw new ArgumentException("Incorrect channel description");
             }
 
         }
