@@ -24,6 +24,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
             standardVersion = GetStandardVersion(signatureBinary);
             channelsDescription = new ISOChannels(signatureBinary);
+            foreach (byte b in signatureBinary) { Console.Write(b); Console.Write(", "); }
         }
 
         private bool IsISOHeader(byte[] binary)

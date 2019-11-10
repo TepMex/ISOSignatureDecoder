@@ -77,7 +77,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
             if(HasMinValue)
             {
-                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch(ChannelType)
                 {
                     case IsoChannelsEnum.X:
@@ -111,7 +111,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
             if (HasMaxValue)
             {
-                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch (ChannelType)
                 {
                     case IsoChannelsEnum.X:
@@ -144,7 +144,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
             if(HasAvgValue)
             {
-                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch (ChannelType)
                 {
                     case IsoChannelsEnum.X:
@@ -178,7 +178,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
             if (HasStd)
             {
-                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch (ChannelType)
                 {
                     case IsoChannelsEnum.X:
