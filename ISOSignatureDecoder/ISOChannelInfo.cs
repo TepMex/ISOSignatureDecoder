@@ -13,14 +13,17 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
         public IsoChannelsEnum ChannelType;
 
-        public bool Scale { get { return info.Get(7); } }
-        public bool MinValue { get { return info.Get(6); } }
-        public bool MaxValue { get { return info.Get(5); } }
-        public bool AvgValue { get { return info.Get(4); } }
-        public bool Std { get { return info.Get(3); } }
-        public bool ConstValue { get { return info.Get(2); } }
-        public bool LinearComponentDeleted { get { return info.Get(1); } }
+        public bool HasScale { get { return info.Get(7); } }
+        public bool HasMinValue { get { return info.Get(6); } }
+        public bool HasMaxValue { get { return info.Get(5); } }
+        public bool HasAvgValue { get { return info.Get(4); } }
+        public bool HasStd { get { return info.Get(3); } }
+        public bool HasConstValue { get { return info.Get(2); } }
+        public bool HasLinearComponentDeleted { get { return info.Get(1); } }
 
+        public double Scale;
+        public double MinValue;
+        public double MaxValue;
         public int Count
         {
             get
@@ -45,7 +48,72 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             ChannelType = type;
             FromIndex = index;
             info = new BitArray(new byte[1] { signatureBinary[index] });
-            ToIndex = FromIndex + 2 * Convert.ToInt32(Scale) + 2 * Convert.ToInt32(MinValue) + 2 * Convert.ToInt32(MaxValue) + 2 * Convert.ToInt32(AvgValue) + 2 * Convert.ToInt32(Std);
+            ToIndex = FromIndex + 2 * Convert.ToInt32(HasScale) + 2 * Convert.ToInt32(HasMinValue) + 2 * Convert.ToInt32(HasMaxValue) + 2 * Convert.ToInt32(HasAvgValue) + 2 * Convert.ToInt32(HasStd);
+
+            int descBytes = index + 1;
+            if(HasScale)
+            {
+                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                BitArray mantissMask = new BitArray(new byte[2] { 0b00000111, 0b11111111 });
+                BitArray exponentMask = new BitArray(new byte[2] { 0b11111000, 0b00000000 });
+                BitArray mantissBits = new BitArray(raw);
+                BitArray exponentBits = new BitArray(raw);
+
+                exponentBits = exponentBits.And(exponentMask);
+                int[] arr = new int[1];
+                exponentBits.CopyTo(arr, 0);
+                int exponent = (arr[0] >> 3) - 16;
+
+                mantissBits = mantissBits.And(mantissMask);
+                byte[] byteArr = new byte[2];
+                mantissBits.CopyTo(byteArr, 0);
+                int mantiss = (int)BitConverter.ToUInt16(byteArr.Reverse().ToArray(), 0);
+
+                Scale = Math.Pow(1 + mantiss / Math.Pow(2, 11), (double)exponent - 16);
+                descBytes += 2;
+            }
+
+            if(HasMinValue)
+            {
+                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                switch(ChannelType)
+                {
+                    case IsoChannelsEnum.X:
+                    case IsoChannelsEnum.Y:
+                    case IsoChannelsEnum.VX:
+                    case IsoChannelsEnum.VY:
+                    case IsoChannelsEnum.AX:
+                    case IsoChannelsEnum.AY:
+                    case IsoChannelsEnum.TX:
+                    case IsoChannelsEnum.TY:
+                        {
+                            MinValue = (double)BitConverter.ToUInt16(raw, 0);
+                            break;
+                        }
+
+                    case IsoChannelsEnum.Z:
+                    case IsoChannelsEnum.T:
+                    case IsoChannelsEnum.DT:
+                    case IsoChannelsEnum.F:
+                    case IsoChannelsEnum.Az:
+                    case IsoChannelsEnum.E:
+                    case IsoChannelsEnum.R:
+                        {
+                            MinValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
+                            break;
+                        }
+                }
+                
+                descBytes += 2;
+            }
+
+            if (HasMaxValue)
+            {
+                byte[] raw = new byte[2] { signatureBinary[descBytes], signatureBinary[descBytes + 1] };
+                MaxValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
+                descBytes += 2;
+            }
+
         }
     }
 }
