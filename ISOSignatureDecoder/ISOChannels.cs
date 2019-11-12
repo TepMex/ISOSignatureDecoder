@@ -73,7 +73,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             }
         }
 
-        private List<ISOChannelInfo> channelInfo = new List<ISOChannelInfo>();
+        public List<ISOChannelInfo> ChannelInfo = new List<ISOChannelInfo>();
 
         public ISOChannels(byte[] binary)
         {
@@ -83,7 +83,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             foreach(IsoChannelsEnum ch in channelsEnabled)
             {
                 ISOChannelInfo ci = new ISOChannelInfo(binary, channelNum, ch);
-                channelInfo.Add(ci);
+                ChannelInfo.Add(ci);
                 channelNum = ci.ToIndex;
 
             }
