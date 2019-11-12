@@ -15,7 +15,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
         private string standardVersion;
         private ISOChannels channelsDescription;
 
-        private List<Dictionary<IsoChannelsEnum, double>> points = new List<Dictionary<IsoChannelsEnum, double>>();
+        private List<ISOSignaturePoint> points = new List<ISOSignaturePoint>();
 
         public ISOSignature(byte[] signatureBinary)
         {
@@ -51,18 +51,18 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
         }
 
-        private List<Dictionary<IsoChannelsEnum, double>> ParsePoints(byte[] samples, int sampleCount)
+        private List<ISOSignaturePoint> ParsePoints(byte[] samples, int sampleCount)
         {
 
-            List<Dictionary<IsoChannelsEnum, double>> result = new List<Dictionary<IsoChannelsEnum, double>>();
+            List<ISOSignaturePoint> result = new List<ISOSignaturePoint>();
             int sampleSize = samples.Length / sampleCount;
             for (int i = 0; i < samples.Length; i = i + sampleSize)
             {
-                Dictionary<IsoChannelsEnum, double> point = new Dictionary<IsoChannelsEnum, double>();
+                Dictionary<ISOChannelType, double> point = new Dictionary<ISOChannelType, double>();
                 int idx = i;
                 foreach(ISOChannelInfo ci in channelsDescription.ChannelInfo)
                 {
-                    IsoChannelsEnum channelType = ci.ChannelType;
+                    ISOChannelType channelType = ci.ChannelType;
                     ByteSizeAttribute bsAttr = (ByteSizeAttribute)channelType.GetType().GetField(channelType.ToString())
                         .GetCustomAttributes(typeof(ByteSizeAttribute), false)[0];
 
@@ -76,31 +76,31 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
                     switch (channelType)
                     {
-                        case IsoChannelsEnum.X:
-                        case IsoChannelsEnum.Y:
-                        case IsoChannelsEnum.VX:
-                        case IsoChannelsEnum.VY:
-                        case IsoChannelsEnum.AX:
-                        case IsoChannelsEnum.AY:
-                        case IsoChannelsEnum.TX:
-                        case IsoChannelsEnum.TY:
+                        case ISOChannelType.X:
+                        case ISOChannelType.Y:
+                        case ISOChannelType.VX:
+                        case ISOChannelType.VY:
+                        case ISOChannelType.AX:
+                        case ISOChannelType.AY:
+                        case ISOChannelType.TX:
+                        case ISOChannelType.TY:
                             {
                                 value = (int)BitConverter.ToUInt16(valueRaw, 0) - 32768;
                                 break;
                             }
 
-                        case IsoChannelsEnum.Z:
-                        case IsoChannelsEnum.T:
-                        case IsoChannelsEnum.DT:
-                        case IsoChannelsEnum.F:
-                        case IsoChannelsEnum.Az:
-                        case IsoChannelsEnum.E:
-                        case IsoChannelsEnum.R:
+                        case ISOChannelType.Z:
+                        case ISOChannelType.T:
+                        case ISOChannelType.DT:
+                        case ISOChannelType.F:
+                        case ISOChannelType.Az:
+                        case ISOChannelType.E:
+                        case ISOChannelType.R:
                             {
                                 value = (int)BitConverter.ToUInt16(valueRaw, 0);
                                 break;
                             }
-                        case IsoChannelsEnum.S:
+                        case ISOChannelType.S:
                             {
                                 value = valueRaw[0] > 0 ? 1.0 : 0;
                                 break;
@@ -117,7 +117,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
 
                 }
 
-                result.Add(point);
+                result.Add(new ISOSignaturePoint(point));
             }
 
             return result;

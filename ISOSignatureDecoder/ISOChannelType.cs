@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SignatureSDKTest.ISOSignatureDecoder
 {
-    public enum IsoChannelsEnum : int
+    public enum ISOChannelType : int
     {
         [ByteSize(2)]
         [Order(16)]

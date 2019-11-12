@@ -11,23 +11,23 @@ namespace SignatureSDKTest.ISOSignatureDecoder
     {
         private BitArray bitFlags;
 
-        public bool X { get { return bitFlags.Get((int)IsoChannelsEnum.X); } }
-        public bool Y { get{ return bitFlags.Get((int)IsoChannelsEnum.Y);} }
-        public bool Z { get{ return bitFlags.Get((int)IsoChannelsEnum.Z);} }
-        public bool VX{ get{ return bitFlags.Get((int)IsoChannelsEnum.VX); } }
-        public bool VY{ get{ return bitFlags.Get((int)IsoChannelsEnum.VY); } }
-        public bool AX{ get{ return bitFlags.Get((int)IsoChannelsEnum.AX); } }
-        public bool AY{ get{ return bitFlags.Get((int)IsoChannelsEnum.AY); } }
-        public bool T { get{ return bitFlags.Get((int)IsoChannelsEnum.T);} }
+        public bool X { get { return bitFlags.Get((int)ISOChannelType.X); } }
+        public bool Y { get{ return bitFlags.Get((int)ISOChannelType.Y);} }
+        public bool Z { get{ return bitFlags.Get((int)ISOChannelType.Z);} }
+        public bool VX{ get{ return bitFlags.Get((int)ISOChannelType.VX); } }
+        public bool VY{ get{ return bitFlags.Get((int)ISOChannelType.VY); } }
+        public bool AX{ get{ return bitFlags.Get((int)ISOChannelType.AX); } }
+        public bool AY{ get{ return bitFlags.Get((int)ISOChannelType.AY); } }
+        public bool T { get{ return bitFlags.Get((int)ISOChannelType.T);} }
                              
-        public bool DT{ get{ return bitFlags.Get((int)IsoChannelsEnum.DT); } }
-        public bool F { get{ return bitFlags.Get((int)IsoChannelsEnum.F);} }
-        public bool S { get{ return bitFlags.Get((int)IsoChannelsEnum.S);} }
-        public bool TX{ get{ return bitFlags.Get((int)IsoChannelsEnum.TX); } }
-        public bool TY{ get{ return bitFlags.Get((int)IsoChannelsEnum.TY); } }
-        public bool Az{ get{ return bitFlags.Get((int)IsoChannelsEnum.Az); } }
-        public bool E { get {return bitFlags.Get((int)IsoChannelsEnum.E); } }
-        public bool R { get { return bitFlags.Get((int)IsoChannelsEnum.R); } }
+        public bool DT{ get{ return bitFlags.Get((int)ISOChannelType.DT); } }
+        public bool F { get{ return bitFlags.Get((int)ISOChannelType.F);} }
+        public bool S { get{ return bitFlags.Get((int)ISOChannelType.S);} }
+        public bool TX{ get{ return bitFlags.Get((int)ISOChannelType.TX); } }
+        public bool TY{ get{ return bitFlags.Get((int)ISOChannelType.TY); } }
+        public bool Az{ get{ return bitFlags.Get((int)ISOChannelType.Az); } }
+        public bool E { get {return bitFlags.Get((int)ISOChannelType.E); } }
+        public bool R { get { return bitFlags.Get((int)ISOChannelType.R); } }
 
         public int LastByteIndex = 0;
 
@@ -47,15 +47,15 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             }
         }
 
-        private List<IsoChannelsEnum> channelsEnabled {
+        private List<ISOChannelType> channelsEnabled {
             get
             {
-                List<IsoChannelsEnum> result = new List<IsoChannelsEnum>();
+                List<ISOChannelType> result = new List<ISOChannelType>();
                 for(int i = 0; i<bitFlags.Length; i++)
                 {
                     if(bitFlags.Get(i))
                     {
-                        result.Add((IsoChannelsEnum)i);
+                        result.Add((ISOChannelType)i);
                     }
                 }
 
@@ -80,7 +80,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
             bitFlags = new BitArray(new byte[2] { binary[8], binary[9] });
 
             int channelNum = 10;
-            foreach(IsoChannelsEnum ch in channelsEnabled)
+            foreach(ISOChannelType ch in channelsEnabled)
             {
                 ISOChannelInfo ci = new ISOChannelInfo(binary, channelNum, ch);
                 ChannelInfo.Add(ci);

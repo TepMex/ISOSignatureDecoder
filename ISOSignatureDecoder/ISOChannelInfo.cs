@@ -11,7 +11,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
     {
         private BitArray info;
 
-        public IsoChannelsEnum ChannelType;
+        public ISOChannelType ChannelType;
 
         public bool HasScale { get { return info.Get(7); } }
         public bool HasMinValue { get { return info.Get(6); } }
@@ -45,7 +45,7 @@ namespace SignatureSDKTest.ISOSignatureDecoder
         public int FromIndex;
         public int ToIndex;
 
-        public ISOChannelInfo(byte[] signatureBinary, int index, IsoChannelsEnum type)
+        public ISOChannelInfo(byte[] signatureBinary, int index, ISOChannelType type)
         {
             ChannelType = type;
             FromIndex = index;
@@ -80,26 +80,26 @@ namespace SignatureSDKTest.ISOSignatureDecoder
                 byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch(ChannelType)
                 {
-                    case IsoChannelsEnum.X:
-                    case IsoChannelsEnum.Y:
-                    case IsoChannelsEnum.VX:
-                    case IsoChannelsEnum.VY:
-                    case IsoChannelsEnum.AX:
-                    case IsoChannelsEnum.AY:
-                    case IsoChannelsEnum.TX:
-                    case IsoChannelsEnum.TY:
+                    case ISOChannelType.X:
+                    case ISOChannelType.Y:
+                    case ISOChannelType.VX:
+                    case ISOChannelType.VY:
+                    case ISOChannelType.AX:
+                    case ISOChannelType.AY:
+                    case ISOChannelType.TX:
+                    case ISOChannelType.TY:
                         {
                             MinValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
                             break;
                         }
 
-                    case IsoChannelsEnum.Z:
-                    case IsoChannelsEnum.T:
-                    case IsoChannelsEnum.DT:
-                    case IsoChannelsEnum.F:
-                    case IsoChannelsEnum.Az:
-                    case IsoChannelsEnum.E:
-                    case IsoChannelsEnum.R:
+                    case ISOChannelType.Z:
+                    case ISOChannelType.T:
+                    case ISOChannelType.DT:
+                    case ISOChannelType.F:
+                    case ISOChannelType.Az:
+                    case ISOChannelType.E:
+                    case ISOChannelType.R:
                         {
                             MinValue = (double)BitConverter.ToUInt16(raw, 0);
                             break;
@@ -114,26 +114,26 @@ namespace SignatureSDKTest.ISOSignatureDecoder
                 byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch (ChannelType)
                 {
-                    case IsoChannelsEnum.X:
-                    case IsoChannelsEnum.Y:
-                    case IsoChannelsEnum.VX:
-                    case IsoChannelsEnum.VY:
-                    case IsoChannelsEnum.AX:
-                    case IsoChannelsEnum.AY:
-                    case IsoChannelsEnum.TX:
-                    case IsoChannelsEnum.TY:
+                    case ISOChannelType.X:
+                    case ISOChannelType.Y:
+                    case ISOChannelType.VX:
+                    case ISOChannelType.VY:
+                    case ISOChannelType.AX:
+                    case ISOChannelType.AY:
+                    case ISOChannelType.TX:
+                    case ISOChannelType.TY:
                         {
                             MaxValue = (double)((int)BitConverter.ToUInt16(raw, 0) - 32768);
                             break;
                         }
 
-                    case IsoChannelsEnum.Z:
-                    case IsoChannelsEnum.T:
-                    case IsoChannelsEnum.DT:
-                    case IsoChannelsEnum.F:
-                    case IsoChannelsEnum.Az:
-                    case IsoChannelsEnum.E:
-                    case IsoChannelsEnum.R:
+                    case ISOChannelType.Z:
+                    case ISOChannelType.T:
+                    case ISOChannelType.DT:
+                    case ISOChannelType.F:
+                    case ISOChannelType.Az:
+                    case ISOChannelType.E:
+                    case ISOChannelType.R:
                         {
                             MaxValue = (double)BitConverter.ToUInt16(raw, 0);
                             break;
@@ -147,26 +147,26 @@ namespace SignatureSDKTest.ISOSignatureDecoder
                 byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch (ChannelType)
                 {
-                    case IsoChannelsEnum.X:
-                    case IsoChannelsEnum.Y:
-                    case IsoChannelsEnum.VX:
-                    case IsoChannelsEnum.VY:
-                    case IsoChannelsEnum.AX:
-                    case IsoChannelsEnum.AY:
-                    case IsoChannelsEnum.TX:
-                    case IsoChannelsEnum.TY:
+                    case ISOChannelType.X:
+                    case ISOChannelType.Y:
+                    case ISOChannelType.VX:
+                    case ISOChannelType.VY:
+                    case ISOChannelType.AX:
+                    case ISOChannelType.AY:
+                    case ISOChannelType.TX:
+                    case ISOChannelType.TY:
                         {
                             Avg = (int)BitConverter.ToUInt16(raw, 0) - 32768;
                             break;
                         }
 
-                    case IsoChannelsEnum.Z:
-                    case IsoChannelsEnum.T:
-                    case IsoChannelsEnum.DT:
-                    case IsoChannelsEnum.F:
-                    case IsoChannelsEnum.Az:
-                    case IsoChannelsEnum.E:
-                    case IsoChannelsEnum.R:
+                    case ISOChannelType.Z:
+                    case ISOChannelType.T:
+                    case ISOChannelType.DT:
+                    case ISOChannelType.F:
+                    case ISOChannelType.Az:
+                    case ISOChannelType.E:
+                    case ISOChannelType.R:
                         {
                             Avg = (int)BitConverter.ToUInt16(raw, 0);
                             break;
@@ -181,26 +181,26 @@ namespace SignatureSDKTest.ISOSignatureDecoder
                 byte[] raw = new byte[2] { signatureBinary[descBytes+1], signatureBinary[descBytes] };
                 switch (ChannelType)
                 {
-                    case IsoChannelsEnum.X:
-                    case IsoChannelsEnum.Y:
-                    case IsoChannelsEnum.VX:
-                    case IsoChannelsEnum.VY:
-                    case IsoChannelsEnum.AX:
-                    case IsoChannelsEnum.AY:
-                    case IsoChannelsEnum.TX:
-                    case IsoChannelsEnum.TY:
+                    case ISOChannelType.X:
+                    case ISOChannelType.Y:
+                    case ISOChannelType.VX:
+                    case ISOChannelType.VY:
+                    case ISOChannelType.AX:
+                    case ISOChannelType.AY:
+                    case ISOChannelType.TX:
+                    case ISOChannelType.TY:
                         {
                             Std = (int)BitConverter.ToUInt16(raw, 0) - 32768;
                             break;
                         }
 
-                    case IsoChannelsEnum.Z:
-                    case IsoChannelsEnum.T:
-                    case IsoChannelsEnum.DT:
-                    case IsoChannelsEnum.F:
-                    case IsoChannelsEnum.Az:
-                    case IsoChannelsEnum.E:
-                    case IsoChannelsEnum.R:
+                    case ISOChannelType.Z:
+                    case ISOChannelType.T:
+                    case ISOChannelType.DT:
+                    case ISOChannelType.F:
+                    case ISOChannelType.Az:
+                    case ISOChannelType.E:
+                    case ISOChannelType.R:
                         {
                             Std = (int)BitConverter.ToUInt16(raw, 0);
                             break;
