@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SignatureSDKTest.ISOSignatureDecoder
+namespace ISOSignatureDecoder
 {
     public enum ISOChannelType : int
     {
